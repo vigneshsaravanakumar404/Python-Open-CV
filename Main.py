@@ -2,7 +2,6 @@
 import streamlit as st
 import numpy as np
 import cv2
-from io import BytesIO
 
 # Function to remove background based on a threshold
 def removebg(image: np.ndarray, THRESHOLD: int, color: tuple) -> np.ndarray:
