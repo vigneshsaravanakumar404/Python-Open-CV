@@ -45,22 +45,29 @@ def get_image_download_link(img, filename: str, text: str) -> st.download_button
             mime="image/png"
     )
 
-# UI
+# UI Enhancements
 st.title("✒️ Signature Background Remover")
+st.markdown("Easily remove the background from your signature and customize its color. Just upload your image, adjust the settings, and download your new signature!")
 
-# Variables
-INPUT = st.file_uploader("Choose an Image File", type=['png', 'jpg', 'jpeg'], accept_multiple_files=False)
-THRESHOLD = st.slider('Threshold', 0, 255 * 3, 300, 1)
-COLOR_HEX = st.color_picker('Pick A Signature Color', '#000000')
-R, G, B = hex_to_rgb(COLOR_HEX)
+# Layout Adjustments
+col1, col2 = st.columns(2)
+with col1:
+    INPUT = st.file_uploader("Choose an Image File", type=['png', 'jpg', 'jpeg'], accept_multiple_files=False)
+with col2:
+    COLOR_HEX = st.color_picker('Pick A Signature Color', '#000000')
+    THRESHOLD = st.slider('Threshold', 0, 255 * 3, 300, 1)
 
-# Allow 
 if INPUT is not None:
-    FILE = np.asarray(bytearray(INPUT.read()), dtype=np.uint8) # Get the file
-    IMAGE = removebg(cv2.imdecode(FILE, cv2.IMREAD_COLOR), THRESHOLD, (R, G, B)) # Remove Background
-    
-    st.image(IMAGE, use_column_width=True, channels="RGBA") # Display Image
-    get_image_download_link(IMAGE, "modified_signature.png", "Download Modified Signature") # Download Button
-    
+    FILE = np.asarray(bytearray(INPUT.read()), dtype=np.uint8)
+    R, G, B = hex_to_rgb(COLOR_HEX)
+    IMAGE = removebg(cv2.imdecode(FILE, cv2.IMREAD_COLOR), THRESHOLD, (R, G, B))
+    st.image(IMAGE, use_column_width=True, channels="RGBA")
+    get_image_download_link(IMAGE, "modified_signature.png", "Download Modified Signature")
 else:
-    st.warning("Please upload an image file") # Warning Message
+    st.warning("Please upload an image file")
+
+st.sidebar.header("How It Works")
+st.sidebar.text("1. Upload your signature image.\n2. Adjust the threshold and color.\n3. Download your modified signature.")
+
+st.sidebar.header("About")
+st.sidebar.info("By: Vignesh Saravanakumar")
